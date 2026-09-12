@@ -455,7 +455,6 @@ private fun TextKeyButton(
     }
     val isLiquidGlass = LocalLiquidGlassEnabled.current
     val backdrop: LayerBackdrop? = LocalWallpaperBackdrop.current
-    val currentPhoto by rememberUpdatedState(backgroundPhoto)
     val lensRefraction = remember { Animatable(if (isLiquidGlass) lqConfig.lensIdle else 0f) }
 
     LaunchedEffect(isLiquidGlass) {
@@ -516,9 +515,7 @@ private fun TextKeyButton(
     // BEHIND the label/hint/icon children — attaching it as a later sibling would
     // paint an opaque refracted pane over the text whenever a background is set.
     val glassBackdrop = backdrop
-    val glassModifier = if (isLiquidGlass && glassBackdrop != null &&
-        (lqConfig.depthEnabled || lqConfig.chromaticEnabled || currentPhoto != null)
-    ) {
+    val glassModifier = if (isLiquidGlass && glassBackdrop != null) {
         val heightPx = with(density) { (effectiveLens * lqConfig.heightMultiplier).dp.toPx() }
         val amountPx = with(density) { (effectiveLens * lqConfig.amountMultiplier).dp.toPx() }
         Modifier.drawBackdrop(

@@ -56,6 +56,7 @@ import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import dev.ngocthanhgl.vikey.R
 import dev.ngocthanhgl.vikey.app.FlorisPreferenceStore
+import dev.ngocthanhgl.vikey.ime.theme.LocalLiquidGlassEnabled
 import dev.ngocthanhgl.vikey.ime.theme.LocalWallpaperBackdrop
 import dev.ngocthanhgl.vikey.ime.smartbar.IncognitoDisplayMode
 import dev.ngocthanhgl.vikey.ime.smartbar.InlineSuggestionsStyleCache
@@ -90,6 +91,16 @@ fun TextInputLayout(
     val bgPhotoVis by prefs.backgroundPhoto.visibility.collectAsState()
     val bgPhotoBlur by prefs.backgroundPhoto.blurRadius.collectAsState()
     val gradPresetId by prefs.backgroundPhoto.gradientPreset.collectAsState()
+    val isLiquidGlass = LocalLiquidGlassEnabled.current
+    // Liquid glass always needs visible content to refract. When the user has
+    // not selected a photo or gradient, fall back to the built-in aurora
+    // gradient instead of leaving the shared backdrop empty.
+    val effectiveGradPresetId =
+        if (isLiquidGlass && bgPhotoPath.isBlank() && gradPresetId.isBlank()) {
+            "aurora"
+        } else {
+            gradPresetId
+        }
 
     var bgBitmap by remember(bgPhotoPath) { mutableStateOf<Bitmap?>(null) }
     LaunchedEffect(bgPhotoPath) {
@@ -137,11 +148,11 @@ fun TextInputLayout(
         }
     }
 
-    val gradBitmap = remember(gradPresetId, photoBoxSize) {
-        if (gradPresetId.isNotBlank() && photoBoxSize.width > 0 && photoBoxSize.height > 0) {
+    val gradBitmap = remember(effectiveGradPresetId, photoBoxSize) {
+        if (effectiveGradPresetId.isNotBlank() && photoBoxSize.width > 0 && photoBoxSize.height > 0) {
             val w = photoBoxSize.width
             val h = photoBoxSize.height
-            val preset = GradientPreset.ALL.find { it.id == gradPresetId }
+            val preset = GradientPreset.ALL.find { it.id == effectiveGradPresetId }
             if (preset != null) {
                 val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
                 val canvas = android.graphics.Canvas(bmp)
@@ -177,9 +188,9 @@ fun TextInputLayout(
     }
     val bgPhotoBitmap = remember(displaySource) { displaySource?.asImageBitmap() }
 
-    // Single shared backdrop capturing the wallpaper image. Key glass refracts THIS
-    // layer, so the bent content is exactly the background the user sees — no
-    // duplicated copy is drawn inside keys.
+    // Single shared backdrop capturing the visible keyboard background. Key glass
+    // refracts THIS layer, so the bent content is exactly the background the
+    // user sees — no duplicated copy is drawn inside keys.
     val bgBackdrop = rememberLayerBackdrop()
 
     val bgPhotoState = remember(bgPhotoBitmap, photoWindowPos, photoBoxSize, bgPhotoVis) {
@@ -216,7 +227,7 @@ fun TextInputLayout(
                 photoBoxSize = coords.size
             },
     ) {
-        if ((bgPhotoPath.isNotBlank() || gradPresetId.isNotBlank()) && bgPhotoBitmap != null) {
+        if ((bgPhotoPath.isNotBlank() || effectiveGradPresetId.isNotBlank()) && bgPhotoBitmap != null) {
             Image(
                 bitmap = bgPhotoBitmap,
                 contentDescription = null,
@@ -237,7 +248,7 @@ fun TextInputLayout(
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .then(
-                        if ((bgPhotoPath.isNotBlank() || gradPresetId.isNotBlank()) && bgBitmapFromSource != null) {
+                        if ((bgPhotoPath.isNotBlank() || effectiveGradPresetId.isNotBlank()) && bgBitmapFromSource != null) {
                             Modifier.drawBehind {
                                 val overlayAlpha = (bgPhotoVis / 100f) * 0.35f
                                 drawRect(Color.Black.copy(alpha = overlayAlpha), size = size)
