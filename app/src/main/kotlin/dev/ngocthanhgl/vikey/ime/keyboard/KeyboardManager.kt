@@ -555,6 +555,7 @@ class KeyboardManager(context: Context) : InputKeyEventReceiver {
         val candidate = nlpManager.getAutoCommitCandidate()
         if (candidate != null) {
             commitCandidate(candidate)
+            editorInstance.onManualSpaceCommitted()
             nlpManager.discardPendingCompletion()
         } else {
             // Space ends the typed word: learn it into the personal dictionary.
@@ -571,6 +572,7 @@ class KeyboardManager(context: Context) : InputKeyEventReceiver {
         val candidate = nlpManager.getAutoCommitCandidate()
         if (candidate != null) {
             commitCandidate(candidate)
+            editorInstance.onManualSpaceCommitted()
             // Accepted word is recorded via notifySuggestionAccepted; drop the
             // typed prefix without learning it again.
             nlpManager.discardPendingCompletion()

@@ -307,8 +307,19 @@ class EditorInstance(context: Context) : AbstractEditorInstance(context) {
      *
      * @return True on success, false if an error occurred or the input connection is invalid.
      */
-    fun commitCompletion(candidate: SuggestionCandidate): Boolean {
-        val text = candidate.text.toString()
+    /**
+     * A physically pressed space is a manual separator, even when it routes
+     * through auto-commit (the committed text looks identical, so the user
+     * experiences it as a manual space). Clear both space-eating states so a
+     * following punctuation keeps the space ("đó" + space + "." stays "đó .").
+     * Tap-accepts don't call this, so they keep the Gboard-style suck-in.
+     */
+    fun onManualSpaceCommitted() {
+        autoSpace.setInactive()
+        lastCommitWasSuggestion = false
+    }
+
+    fun commitCompletion(candidate: SuggestionCandidate): Boolean {        val text = candidate.text.toString()
         if (text.isEmpty() || activeInfo.isRawInputEditor) return false
         val content = activeContent
         val currentWord = content.currentWordText?.toString()
