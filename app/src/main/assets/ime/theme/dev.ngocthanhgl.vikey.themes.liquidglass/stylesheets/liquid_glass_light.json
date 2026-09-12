@@ -5,20 +5,20 @@
     "--glass-border": "rgba(70,85,115,0.35)",
     "--glass-edge": "rgba(70,85,115,0.18)",
     "--glass-rim": "rgba(70,85,115,0.35)",
-    "--k": "rgba(255,255,255,0.20)",
+    "--k": "rgba(255,255,255,0)",
     "--tk": "rgba(16,22,34,0.92)",
-    "--k-dim": "rgba(255,255,255,0.20)",
+    "--k-dim": "rgba(255,255,255,0)",
     "--tk-dim": "rgba(16,22,34,0.92)",
-    "--k-fn": "rgba(255,255,255,0.20)",
+    "--k-fn": "rgba(255,255,255,0)",
     "--tk-fn": "rgba(16,22,34,0.92)",
-    "--k-enter": "rgba(255,255,255,0.20)",
+    "--k-enter": "rgba(255,255,255,0)",
     "--tk-enter": "rgba(16,22,34,0.92)",
-    "--k-enter-pressed": "rgba(235,240,250,0.38)",
-    "--k-del": "rgba(255,255,255,0.20)",
+    "--k-enter-pressed": "rgba(235,240,250,0)",
+    "--k-del": "rgba(255,255,255,0)",
     "--tk-del": "rgba(16,22,34,0.92)",
-    "--k-space": "rgba(255,255,255,0.20)",
+    "--k-space": "rgba(255,255,255,0)",
     "--tk-space": "rgba(16,22,34,0.92)",
-    "--k-emoji": "rgba(255,255,255,0.20)",
+    "--k-emoji": "rgba(255,255,255,0)",
     "--tk-emoji": "rgba(16,22,34,0.92)",
     "--acc": "rgba(30,45,75,0.90)",
     "--kpop": "rgba(250,251,255,0.97)",
@@ -26,7 +26,7 @@
     "--kpop-f": "rgba(225,233,246,0.98)",
     "--tb": "rgba(40,52,74,0.72)",
     "--tb-dim": "rgba(40,52,74,0.38)",
-    "--pressed": "rgba(235,240,250,0.35)",
+    "--pressed": "rgba(235,240,250,0)",
     "--tp": "rgba(10,15,25,0.96)",
     "--shape": "rounded-corner(42%,42%,42%,42%)",
     "--shape-key": "rounded-corner(14dp,14dp,14dp,14dp)",
@@ -76,8 +76,8 @@
     "shadow-elevation": "var(--shadow-elevation)",
     "shape": "var(--shape-pill)",
     "text-max-lines": "1",
-    "border-color": "var(--glass-rim)",
-    "border-width": "1dp"
+    "border-color": "rgba(0,0,0,0)",
+    "border-width": "0dp"
   },
   "key[code=-11]": {
     "background": "var(--k-fn)",
@@ -87,8 +87,8 @@
     "background": "var(--k-del)",
     "foreground": "var(--tk-del)",
     "font-size": "18sp",
-        "border-color": "var(--glass-rim)",
-    "border-width": "1dp"
+        "border-color": "rgba(0,0,0,0)",
+    "border-width": "0dp"
   },
   "key[code=-202,-203]": {
     "background": "var(--k-fn)",
@@ -111,8 +111,8 @@
     "background": "var(--k-enter)",
     "foreground": "var(--tk-enter)",
     "shape": "var(--shape-pill)",
-        "border-color": "var(--glass-rim)",
-    "border-width": "1dp"
+        "border-color": "rgba(0,0,0,0)",
+    "border-width": "0dp"
   },
   "key[code=32]": {
     "background": "var(--k-space)",
@@ -132,8 +132,8 @@
   "key:pressed": {
     "background": "var(--pressed)",
     "foreground": "var(--tp)",
-    "border-color": "rgba(70,95,150,0.50)",
-    "border-width": "1dp"
+    "border-color": "rgba(0,0,0,0)",
+    "border-width": "0dp"
   },
   "key[code=-201]:pressed": {
     "background": "var(--k-enter-pressed)",

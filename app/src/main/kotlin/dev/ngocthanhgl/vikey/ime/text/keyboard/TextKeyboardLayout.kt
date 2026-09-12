@@ -79,7 +79,6 @@ import androidx.compose.ui.unit.toSize
 import com.kyant.backdrop.backdrops.LayerBackdrop
 import com.kyant.backdrop.drawBackdrop
 import com.kyant.backdrop.effects.lens
-import com.kyant.backdrop.highlight.Highlight
 import dev.ngocthanhgl.vikey.FlorisImeService
 import dev.ngocthanhgl.vikey.app.FlorisPreferenceStore
 import dev.ngocthanhgl.vikey.editorInstance
@@ -531,7 +530,8 @@ private fun TextKeyButton(
                     chromaticAberration = lqConfig.chromaticEnabled || !lqConfig.depthEnabled,
                 )
             },
-            highlight = { Highlight.Ambient },
+            highlight = null,
+            shadow = null,
         )
     } else {
         Modifier
