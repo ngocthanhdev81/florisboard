@@ -74,11 +74,14 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.kyant.backdrop.backdrops.LayerBackdrop
 import com.kyant.backdrop.drawBackdrop
 import com.kyant.backdrop.effects.lens
+import com.kyant.backdrop.highlight.Highlight
+import com.kyant.backdrop.shadow.InnerShadow
 import dev.ngocthanhgl.vikey.FlorisImeService
 import dev.ngocthanhgl.vikey.app.FlorisPreferenceStore
 import dev.ngocthanhgl.vikey.editorInstance
@@ -515,8 +518,14 @@ private fun TextKeyButton(
     // paint an opaque refracted pane over the text whenever a background is set.
     val glassBackdrop = backdrop
     val glassModifier = if (isLiquidGlass && glassBackdrop != null) {
-        val heightPx = with(density) { (effectiveLens * lqConfig.heightMultiplier).dp.toPx() }
-        val amountPx = with(density) { (effectiveLens * lqConfig.amountMultiplier).dp.toPx() }
+        // Refraction floor: below these values the lens edge becomes invisible
+        // against busy backdrops. User sliders still scale above the floor.
+        val heightPx = with(density) {
+            maxOf((effectiveLens * lqConfig.heightMultiplier).dp.toPx(), 6.dp.toPx())
+        }
+        val amountPx = with(density) {
+            maxOf((effectiveLens * lqConfig.amountMultiplier).dp.toPx(), 10.dp.toPx())
+        }
         Modifier.drawBackdrop(
             backdrop = glassBackdrop,
             shape = { RoundedCornerShape(22.dp) },
@@ -530,8 +539,23 @@ private fun TextKeyButton(
                     chromaticAberration = lqConfig.chromaticEnabled || !lqConfig.depthEnabled,
                 )
             },
-            highlight = null,
+            // Micro glass edge: hairline ambient light + faint inner depth.
+            // No Snygg stroke, no outer shadow — the rim comes from optics only.
+            highlight = {
+                Highlight.Ambient.copy(
+                    width = 0.5.dp,
+                    blurRadius = 0.75.dp,
+                    alpha = 0.55f,
+                )
+            },
             shadow = null,
+            innerShadow = {
+                InnerShadow(
+                    radius = 2.dp,
+                    offset = DpOffset(0.dp, 1.dp),
+                    color = Color.Black.copy(alpha = 0.18f),
+                )
+            },
         )
     } else {
         Modifier
